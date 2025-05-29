@@ -6,11 +6,19 @@ const TARGET_GROUP = 'בדיקה 2';
 
 const client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: {
-        headless: true,
-        args: ['--no-sandbox']
-    }
-});
+   puppeteer: {
+    headless: true,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu'
+    ]
+}
 
 client.on('qr', qr => {
     qrcode.generate(qr, { small: true });
