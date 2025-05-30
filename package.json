@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "chrome-aws-lambda": "^10.1.0",
-    "puppeteer": "^21.3.8",
+"puppeteer": "^19.11.1",
     "whatsapp-web.js": "^1.22.1",
     "qrcode-terminal": "^0.12.0"
   }
