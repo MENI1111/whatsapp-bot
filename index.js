@@ -8,32 +8,32 @@ client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
 });
 
-client.on('ready', async () => {
+client.on('ready', () => {
     console.log('✅ WhatsApp bot is ready!');
 });
 
 client.on('message', async (message) => {
-    // בדיקת מקור ההודעה
-    const chat = await message.getChat();
+    try {
+        const chat = await message.getChat();
 
-    // בדיקה אם זו קבוצה ואם זו הקבוצה "בדיקה 1"
-    if (chat.isGroup && chat.name === 'בדיקה 1') {
-        // חיפוש קבוצה בשם "בדיקה 2"
-        const chats = await client.getChats();
-        const targetChat = chats.find(c => c.isGroup && c.name === 'בדיקה 2');
+        // הדפסת כל הודעה כדי לבדוק שהיא בכלל מזוהה
+        console.log(`📩 התקבלה הודעה מ-${chat.name}: ${message.body}`);
 
-        if (targetChat) {
-            // שליחת ההודעה לקבוצה השנייה
-            await targetChat.sendMessage(message.body);
-            console.log(`📤 הודעה הועברה מ"בדיקה 1" ל"בדיקה 2": ${message.body}`);
-        } else {
-            console.log('❌ לא נמצאה קבוצה בשם "בדיקה 2"');
+        // רק אם ההודעה היא מקבוצת "בדיקה 1"
+        if (chat.isGroup && chat.name === 'בדיקה 1') {
+            const allChats = await client.getChats();
+            const targetChat = allChats.find(c => c.isGroup && c.name === 'בדיקה 2');
+
+            if (targetChat) {
+                await targetChat.sendMessage(`📤 מועבר מ-"${chat.name}":\n${message.body}`);
+                console.log(`➡️ ההודעה הועברה ל-${targetChat.name}`);
+            } else {
+                console.log('⚠️ קבוצה "בדיקה 2" לא נמצאה!');
+            }
         }
-    }
 
-    // פקודת בדיקה
-    if (message.body === '!ping') {
-        message.reply('pong');
+    } catch (err) {
+        console.error('❌ שגיאה בטיפול בהודעה:', err);
     }
 });
 
